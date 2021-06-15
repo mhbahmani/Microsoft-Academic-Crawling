@@ -1,7 +1,7 @@
 from scrapy_splash import SplashRequest 
 from bs4 import BeautifulSoup
 import scrapy
-
+import json
 
 class ArticlesSpider(scrapy.Spider):
     name = "articlespider"
@@ -35,7 +35,7 @@ class ArticlesSpider(scrapy.Spider):
 
         authors = []
         for author in response.css('div.authors')[0].css('a::text'):
-            authors.append(author)
+            authors.append(author.get())
         data['authors'] = authors
 
         data['citation_count'] = \
@@ -52,5 +52,6 @@ class ArticlesSpider(scrapy.Spider):
         ### TODO: related_topics
 
         filename = 'CrawledPapers-%s.json‬‬' % data['id']
-        with open(filename, 'wb') as file:
-            file.write()
+        with open(filename, 'w') as file:
+            json.dump(data, file)
+
