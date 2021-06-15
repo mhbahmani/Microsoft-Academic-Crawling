@@ -1,5 +1,5 @@
 from scrapy_splash import SplashRequest 
-from bs4 as BeautifulSoup
+from bs4 import BeautifulSoup
 import scrapy
 
 
@@ -20,10 +20,6 @@ class ArticlesSpider(scrapy.Spider):
            ) 
 
     def parse(self, response):
-        filename = 'article-1.html'
-        with open(filename, 'wb') as f:
-            f.write(response.body)
-
         data = {}
 
         data['id'] = response.url.split('/')[-1]
@@ -54,3 +50,7 @@ class ArticlesSpider(scrapy.Spider):
         data['references'] = references
 
         ### TODO: related_topics
+
+        filename = 'CrawledPapers-%s.json‬‬' % data['id']
+        with open(filename, 'wb') as file:
+            file.write()
