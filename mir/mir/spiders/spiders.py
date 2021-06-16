@@ -20,7 +20,7 @@ class ArticlesSpider(scrapy.Spider):
         for url in self.start_urls: 
             yield SplashRequest(url, self.parse, 
                 endpoint='render.html', 
-                args={'wait': 4}, 
+                args={'wait': 20}, 
            )
 
 
