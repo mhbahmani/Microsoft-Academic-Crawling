@@ -17,10 +17,19 @@ class ArticlesSpider(scrapy.Spider):
     crawled = set()
 
     def start_requests(self): 
+        
+        lua_script = """
+            function main(splash)   
+                assert(splash:go(splash.args.url))
+                splash:wait(0.5)  
+                splash:evaljs("document.getElementsByClassName('tag-cloud')[0].getElementsByClassName('au-target icon-expand')[0].click();")   
+            end
+        """
+
         for url in self.start_urls: 
             yield SplashRequest(url, self.parse, 
                 endpoint='render.html', 
-                args={'wait': 20}, 
+                args={'lua_source': lua_script, 'wait': 20}, 
            )
 
 
