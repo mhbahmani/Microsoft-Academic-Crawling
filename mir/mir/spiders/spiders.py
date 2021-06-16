@@ -22,36 +22,66 @@ class ArticlesSpider(scrapy.Spider):
     def parse(self, response):
         data = {}
 
-        data['id'] = response.url.split('/')[-1]
-
-        data['title'] = BeautifulSoup(
-            response.css('h1.name').get(),
-            'html.parser'
-        ).text.strip()
-
-        data['abstract'] = response.css('p:not(p.help-control-title.au-target)::text').get()
-
-        data['date'] = response.css('span.year::text').get().strip()
-
         authors = []
         for author in response.css('div.authors')[0].css('a::text'):
             authors.append(author.get())
-        data['authors'] = authors
-
-        data['citation_count'] = \
-            response.css('div.stats').css('ma-statistics-item')[1].css('div.count::text').get().strip()
-
-        data['reference_count'] = \
-            response.css('div.stats').css('ma-statistics-item')[0].css('div.count::text').get().strip()
-
+        
         references = []
         for ref in response.css('div.results').css('ma-card'):
             references.append(ref.css('div.primary_paper').css('a.title.au-target').css('a[href*=paper]::attr(href)').extract()[0].split('/')[1])
-        data['references'] = references
+
+        yield {
+            'id': response.url.split('/')[-1],
+            'title': BeautifulSoup(
+                        response.css('h1.name').get(),
+                        'html.parser'
+                    ).text.strip(),
+            'abstract': response.css('p:not(p.help-control-title.au-target)::text').get(),
+            'date': response.css('span.year::text').get().strip(),
+            'authors': authors,
+            'citation_count' : \
+                response.css('div.stats'
+                ).css('ma-statistics-item'
+                )[1].css('div.count::text'
+                ).get().strip(),
+            'reference_count': \
+                response.css('div.stats'
+                ).css('ma-statistics-item'
+                )[0].css('div.count::text'
+                ).get().strip(),
+            'references': references
+        }
+
+        # data['id'] = response.url.split('/')[-1]
+
+        # data['title'] = BeautifulSoup(
+        #     response.css('h1.name').get(),
+        #     'html.parser'
+        # ).text.strip()
+
+        # data['abstract'] = response.css('p:not(p.help-control-title.au-target)::text').get()
+
+        # data['date'] = response.css('span.year::text').get().strip()
+
+        # authors = []
+        # for author in response.css('div.authors')[0].css('a::text'):
+        #     authors.append(author.get())
+        # data['authors'] = authors
+
+        # data['citation_count'] = \
+        #     response.css('div.stats').css('ma-statistics-item')[1].css('div.count::text').get().strip()
+
+        # data['reference_count'] = \
+        #     response.css('div.stats').css('ma-statistics-item')[0].css('div.count::text').get().strip()
+
+        # references = []
+        # for ref in response.css('div.results').css('ma-card'):
+        #     references.append(ref.css('div.primary_paper').css('a.title.au-target').css('a[href*=paper]::attr(href)').extract()[0].split('/')[1])
+        # data['references'] = references
 
         ### TODO: related_topics
 
-        filename = 'CrawledPapers-%s.json‬‬' % data['id']
-        with open(filename, 'w') as file:
-            json.dump(data, file)
+        # filename = 'CrawledPapers-%s.json‬‬' % data['id']
+        # with open(filename, 'w') as file:
+        #     json.dump(data, file)
 
