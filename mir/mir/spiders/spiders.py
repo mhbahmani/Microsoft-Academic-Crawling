@@ -13,18 +13,30 @@ class ArticlesSpider(scrapy.Spider):
         'https://academic.microsoft.com/paper/2145339207',
         'https://academic.microsoft.com/paper/2153579005']
 
+    queue = []
+    crawled = set()
+
     def start_requests(self): 
         for url in self.start_urls: 
             yield SplashRequest(url, self.parse, 
                 endpoint='render.html', 
-                args={'wait': 10}, 
-           ) 
+                args={'wait': 4}, 
+           )
+
 
     def parse(self, response):
-        data = {}
-        
+    
+        references = []
+        for ref in response.css('div.results').css('ma-card').css('div.primary_paper').css('a.title.au-target').css('a[href*=paper]::attr(href)').getall():
+            ref_id = ref.split('/')[1]
+            self.queue.append(ref_id)
+            references.append(ref_id)
+
+        article_id = response.url.split('/')[-1]
+
+        self.crawled.add(article_id)
         yield {
-            'id': response.url.split('/')[-1],
+            'id': article_id,
             'title': BeautifulSoup(
                         response.css('h1.name').get(),
                         'html.parser'
@@ -33,6 +45,7 @@ class ArticlesSpider(scrapy.Spider):
             'abstract': response.css('p:not(p.help-control-title.au-target)::text').get(),
             'date': response.css('span.year::text').get().strip(),
             'authors': response.css('div.authors')[0].css('a::text').getall(),
+            'related_topics': [related.split('/')[-1] for related in response.css('div.topics').css('div.tag-cloud').css('a.ma-tag.au-target').css('a[href*=topic]::attr(href)').getall()],
             'citation_count' : \
                 response.css('div.stats'
                 ).css('ma-statistics-item'
@@ -43,8 +56,19 @@ class ArticlesSpider(scrapy.Spider):
                 ).css('ma-statistics-item'
                 )[0].css('div.count::text'
                 ).get().strip(),
-            'references': [ref.split('/')[1] for ref in response.css('div.results').css('ma-card').css('div.primary_paper').css('a.title.au-target').css('a[href*=paper]::attr(href)').getall()]
+            'references': references
         }
+
+
+        for page_id in self.queue:
+            if page_id in self.crawled:
+                continue
+
+            yield SplashRequest('https://academic.microsoft.com/paper/%s' % page_id,
+                self.parse, 
+                endpoint='render.html', 
+                args={'wait': 20}, 
+           ) 
 
         # data['id'] = response.url.split('/')[-1]
 
