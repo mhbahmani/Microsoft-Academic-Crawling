@@ -17,10 +17,21 @@ start_crawler(){
 }
 
 
+help(){
+	echo "    mir_phase3 [COMMAND] [ARGUMENTS]"
+	echo 
+	echo " commands:"
+	echo "     crawl <spider name>      starts the crawler"
+	echo "     page-rank                starts PageRank proccess"
+
+}
 
 
 case $1 in
 	crawl | c)
 		start_crawler $2
+		;;
+	*)
+		help
 		;;
 esac
