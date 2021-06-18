@@ -2,34 +2,50 @@
 
 source venv/bin/activate
 
+project_path=$HOME/.local/share/mir_phase3
+
 
 start_crawler(){
 	spider=$1
 	if test -z $1; then
 		spider=articlespider
 	fi
-	cd mir
-	filename=$(date '+%W-%Y.json')
+	if test -z $2; then
+		filename=$HOME/$(date '+%W-%Y.json')
+	else
+		filename=$2
+	fi
+	echo "output ---------> $filename"
+	echo
+	cd $project_path/mir
 	if test -f $filename; then
-		rm $filename
+		echo "$filename already exists,"
+		read -p "Do you want to overwrite it?! [y|n]: " choice
+		re="(yes|y|Y)"
+		if [[ $choice =~ $re ]]; then
+			rm $filename
+		else
+			echo "Retry with another output file path"
+		fi
 	fi
 	scrapy crawl $spider -o $filename
 }
 
 
 help(){
-	echo "    mir_phase3 [COMMAND] [ARGUMENTS]"
+	echo "    mir_phase3 [COMMAND] [OPTIONS|ARGUMENTS]"
 	echo 
 	echo " commands:"
-	echo "     crawl <spider name>      starts the crawler"
-	echo "     page-rank                starts PageRank proccess"
+	echo "     crawl <spider name>     starts the crawler"
+	echo "	                           specify output file with -o /path/to/output/file option"
+	echo "     page-rank               starts PageRank proccess"
 
 }
 
 
 case $1 in
 	crawl | c)
-		start_crawler $2
+		start_crawler $2 $3
 		;;
 	*)
 		help
