@@ -1,9 +1,9 @@
 #!/bin/bash
 
-source venv/bin/activate
 
 project_path=$HOME/.local/share/mir_phase3
 
+source $project_path/venv/bin/activate
 
 start_crawler(){
 	spider=$1
