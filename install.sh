@@ -14,8 +14,12 @@ do
     fi
 done
 
+echo "Install some packages"
+
 curl_inst=0
 [ $(curl --version | grep -Eci 'release-date') = 0 ] && curl_inst=1
+git_inst=0
+[ $(git --version | grep -Eci 'release-date') = 0 ] && git_inst=1
 
 if [ $curl_inst = 1 ]; then
     if [ -z $package_manager ]; then
@@ -26,16 +30,25 @@ if [ $curl_inst = 1 ]; then
         exit
     fi
     [ curl_intst = 1 ] && $package_manager curl python3-pip git -y
+    [ git_intst = 1 ] && $package_manager python3-pip git -y
 fi
 
 
 main_destination=/usr/local/bin/mir_phase3
+
+echo
+echo "Download repository"
+echo
 
 rm -rf $HOME/.local/share/mir_phase3
 cd $HOME/.local/share
 git clone --depth=1 --branch=master https://github.com/mhbahmani/Microsoft-Academic-Crawling mir_phase3
 cd mir_phase3
 sudo rm -rf .git
+
+echo
+echo "Setup cli"
+echo
 
 sudo rm -rf $main_destination 
 sudo mv mir_phase3 $main_destination
@@ -48,6 +61,7 @@ source venv/bin/activate
 pip3 install -r requirements.txt
 rm -rf MIR_Phase3.pdf example.json README.md
 
+echo
 echo "mir_phase3 successfully installed."
 echo "enjoy!"
 echo
