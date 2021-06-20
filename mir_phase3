@@ -26,6 +26,7 @@ start_crawler(){
 			rm $filename
 		else
 			echo "Retry with another output file path"
+			exit 1
 		fi
 	fi
 	scrapy crawl $spider -o $filename
