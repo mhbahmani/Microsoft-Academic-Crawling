@@ -33,6 +33,12 @@ if [ $curl_inst = 1 ]; then
     [ git_intst = 1 ] && $package_manager python3-pip git -y
 fi
 
+echo "Install docker"
+echo
+
+curl -fsSL https://get.docker.com -o get-docker.sh
+sudo sh get-docker.sh
+
 
 main_destination=/usr/local/bin/mir_phase3
 
