@@ -50,6 +50,26 @@ start_crawler(){
 }
 
 
+page_rank(){
+	alpha=0.85
+	pr_value=1
+	if test $2 = "--alpha"; then
+		alpha=$3
+	elif test $2 = "--pr-value"; then
+		pr_value=$3
+	fi
+
+	if test $4 = "--alpha"; then
+		alpha=$5
+	elif test $4 = "--pr-value"; then
+		pr_value=$5
+	fi
+	python ./mir/page_rank.py --alpha $alpha --pr $pr_value
+	#python $project_path/mir/page_rank.py --alpha $alpha --pr $pr_value
+}
+
+
+
 help(){
 	echo "    mir_phase3 [COMMAND] [OPTIONS|ARGUMENTS]"
 	echo 
@@ -57,13 +77,17 @@ help(){
 	echo "     crawl <spider name>     starts the crawler"
 	echo "	                           specify output file with -o /path/to/output/file option"
 	echo "     page-rank               starts PageRank proccess"
-
+	echo "			--alpha: specify alpha"
+	echo "			--pr-value: speficy pr-value"
 }
 
 
 case $1 in
 	crawl | c)
 		start_crawler $2 $3
+		;;
+	page-rank | pr)
+		page_rank $@
 		;;
 	*)
 		help
