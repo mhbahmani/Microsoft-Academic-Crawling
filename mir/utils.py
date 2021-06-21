@@ -3,14 +3,14 @@ import json
 
 
 def load_data(path=None):
-    if not path: path = 'content.json'
+    if not path: path = './mir/content.json'
     with open(path) as file:
         data = json.load(file)
     return [Node(article['id'], article['references']) for article in data]
 
 
 def create_authors_Rank(path=None):
-    if not path: path = 'content.json'
+    if not path: path = './mir/content.json'
 
     papers = Rank(load_data)
     with open(path) as file:
@@ -26,3 +26,4 @@ def create_authors_Rank(path=None):
         for dest in paper.references:
             node = paper.get_node(dest)
             for authors in node.references:
+                pass
