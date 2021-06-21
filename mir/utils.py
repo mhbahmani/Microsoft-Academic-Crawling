@@ -1,4 +1,4 @@
-from page_rank import Node
+from page_rank import Rank, Node
 import json
 
 
@@ -12,7 +12,7 @@ def load_data(path=None):
 def create_authors_Rank(path=None):
     if not path: path = 'content.json'
 
-    papers = Rank(utils.load_data)
+    papers = Rank(load_data)
     with open(path) as file:
         data = json.load(file)
     authors = set()
