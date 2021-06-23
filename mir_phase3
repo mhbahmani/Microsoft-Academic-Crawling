@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 project_path=$HOME/.local/share/mir_phase3
 
 source $project_path/venv/bin/activate
@@ -64,8 +63,12 @@ page_rank(){
 	elif test $4 = "--pr-value"; then
 		pr_value=$5
 	fi
-	python ./mir/page_rank.py --alpha $alpha --pr $pr_value
-	#python $project_path/mir/page_rank.py --alpha $alpha --pr $pr_value
+	
+	result=$(python $project_path/mir/page_rank.py --alpha $alpha --pr $pr_value)
+	echo $result
+	if test ! -z $7; then
+		echo $result > $7
+	fi
 }
 
 
@@ -79,6 +82,9 @@ help(){
 	echo "     page-rank               starts PageRank proccess"
 	echo "			--alpha: specify alpha"
 	echo "			--pr-value: speficy pr-value"
+	echo
+	echo
+	echo "	In each commad you can save output with -o option"
 }
 
 
