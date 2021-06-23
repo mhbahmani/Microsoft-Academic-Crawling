@@ -3,18 +3,16 @@ import json
 import utils
 import sys
 
-
 args = sys.argv[1:]
-
 ALPHA = float(args[1])
 PR_VALUE = float(args[3])
 
 
 class Rank:
-    def __init__(self, Nodes, alpha):
-        self.nodes: list = Nodes
-        self.data: dict = {}
-        for node in Nodes:
+    def __init__(self, nodes, alpha=ALPHA):
+        self.nodes = nodes
+        self.data = {}
+        for node in nodes:
             self.data[node.id] = Data(
                 node, PR_VALUE, PR_VALUE, 1, 1, 1, 1)
         self.alpha = alpha
@@ -22,7 +20,7 @@ class Rank:
     def iter_hits(self, n):
         for _ in range(n):
             for data in self.data.values():
-                des_nodes = data.Node.references
+                des_nodes = data.node.references
                 for des_node in des_nodes:
                     if des_node in self.data.keys():
                         data.hub_tmp += self.data[des_node].auth 
@@ -30,8 +28,8 @@ class Rank:
 
             self.set_data()
 
-    def get_Node(self, id=None):
-        return self.data[id]
+    def get_node(self, id=None):
+        return self.data.get(id)
 
     def set_data(self):
         for key in self.data.keys():
@@ -55,7 +53,6 @@ class Rank:
                             self.data[des_Node].tmp += conferred_value
 
             self.set_data()
-
     def get_page_ranks(self):
         page_ranks = {}
         for d in self.data.values():
@@ -69,15 +66,18 @@ class Rank:
             reverse=True)[:10]
         top_auth = {}
         for id in top_ids:
-            top_auth[id] = self.get_Node(id).auth
+            top_auth[id] = self.get_node(id).auth
 
         return top_auth
 
 
 if __name__ == '__main__':
 
-    nodes = utils.load_data()
-    graph = Rank(nodes, ALPHA)
-    graph.iterate(5)
-    page_ranks = json.dumps(graph.get_page_ranks(), indent=3)
-    # utils.create_authors_Rank()
+   # nodes = utils.load_data()
+   # graph = Rank(nodes, ALPHA)
+   # graph.iterate(5)
+   # page_ranks = json.dumps(graph.get_page_ranks(), indent=3)
+   # utils.authors_rank()
+    r = Rank(utils.authors_rank())
+    r.iter_hits(5)
+    print(json.dumps(r.get_hit_rank(), indent=3))

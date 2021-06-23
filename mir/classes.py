@@ -3,9 +3,10 @@ from dataclasses import dataclass
 
 @dataclass
 class Node:
-    id: int 
+    id: int
     references: list
     abstract: str = None
+    authors: list = None
 
 
 @dataclass

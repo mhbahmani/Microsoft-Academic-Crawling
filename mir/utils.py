@@ -6,24 +6,37 @@ def load_data(path=None):
     if not path: path = './mir/content.json'
     with open(path) as file:
         data = json.load(file)
-    return [Node(article['id'], article['references']) for article in data]
+    
+    return [Node(article['id'], article['references'], authors=article['authors']) for article in data]
 
 
-def create_authors_Rank(path=None):
-    if not path: path = './mir/content.json'
+def authors_rank():    
+    papers = load_data()
+    graph = Rank(papers)
 
-    papers = Rank(load_data)
-    with open(path) as file:
-        data = json.load(file)
+    g = {} 
     authors = set()
-    for article in data:
-        authors.update(article['authors'])
 
-    g = {}
+    for paper in papers:
+        try:
+            authors.update(paper.authors)
+        except:
+            continue
+        
+
     for author in authors:
-        g[author] = set()
-    for paper in papers.data:
-        for dest in paper.references:
-            node = paper.get_node(dest)
-            for authors in node.references:
-                pass
+        try:
+            g[author] = set()
+        except:
+            continue
+    
+    for paper in papers:
+        if not paper.authors: continue
+        for author in paper.authors:
+            for des in paper.references:
+                des = graph.get_node(des)
+                if des:
+                    for referenced_author in des.node.authors:
+                        g[author].add(referenced_author)
+    
+    return [Node(author, g[author]) for author in g.keys()]
