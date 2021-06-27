@@ -1,6 +1,4 @@
 from classes import Data, Node
-from pprint import pprint
-import utils
 import sys
 
 args = sys.argv[1:]
@@ -21,7 +19,7 @@ class Graph:
             self.data[node.id] = Data(
                 node, PR_VALUE, PR_VALUE, 1, 1, 1, 1)
 
-    def iterate_pages(self, n):
+    def calc_score_with_hits(self, n):
         for _ in range(n):
             for data in self.data.values():
                 des_nodes = data.node.references
@@ -44,7 +42,7 @@ class Graph:
             self.data[key].score_tmp = 0
             self.data[key].hub_tmp = 0
 
-    def iterate(self, n):
+    def calc_score_with_page_rank(self, n):
         for _ in range(n):
             for data in self.data.values():
                 if not data.node.references: continue
@@ -55,32 +53,3 @@ class Graph:
                     if des_Node not in self.data.keys(): continue
                     self.data[des_Node].tmp += conferred_value
             self.update_data()
-
-    def get_page_ranks(self):
-        page_ranks = {}
-        for d in self.data.values():
-            page_ranks[d.node.id] = d.page_rank
-        return page_ranks
-
-    def get_hit_rank(self):
-        top_ids = sorted(
-            self.data,
-            key=lambda id: self.data[id].score,
-            reverse=True
-        )[:20]
-
-        top_authors = {}
-        for id in top_ids:
-            top_authors[id] = self.get_node(id).score
-
-        return top_authors
-
-
-if __name__ == '__main__':
-    graph = Graph(utils.load_data())
-    graph.iterate(5)
-    pprint(graph.get_page_ranks())
-
-    # graph = Graph(utils.authors_rank(), ALPHA)
-    # graph.iterate_pages(NUMBER_OF_ITERATIONS)
-    # pprint(graph.get_hit_rank())
