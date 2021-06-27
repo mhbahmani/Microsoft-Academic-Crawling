@@ -1,4 +1,5 @@
 scrapy
+setuptools_rust
 scrapy-splash
 scrapyjs
 beautifulsoup4
