@@ -1,4 +1,4 @@
-from page_rank import Graph, Node
+from main import Graph, Node
 import json
 
 

@@ -1,6 +1,5 @@
 from classes import Data, Node
 from pprint import pprint
-import json
 import utils
 import sys
 
@@ -48,7 +47,7 @@ class Graph:
     def iterate(self, n):
         for _ in range(n):
             for data in self.data.values():
-                if len(data.node.references) <= 0: continue
+                if not data.node.references: continue
                 conferred_value = (
                     data.page_rank / len(data.node.references)) * self.alpha
                 des_nodes = data.node.references
@@ -78,6 +77,10 @@ class Graph:
 
 
 if __name__ == '__main__':
-    graph = Graph(utils.authors_rank(), ALPHA)
-    graph.iterate_pages(NUMBER_OF_ITERATIONS)
-    pprint(graph.get_hit_rank())
+    graph = Graph(utils.load_data())
+    graph.iterate(5)
+    pprint(graph.get_page_ranks())
+
+    # graph = Graph(utils.authors_rank(), ALPHA)
+    # graph.iterate_pages(NUMBER_OF_ITERATIONS)
+    # pprint(graph.get_hit_rank())
