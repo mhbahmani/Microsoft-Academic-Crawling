@@ -1,4 +1,4 @@
-from page_rank import Rank, Node
+from page_rank import Graph, Node
 import json
 
 
@@ -12,31 +12,29 @@ def load_data(path=None):
 
 def authors_rank():    
     papers = load_data()
-    graph = Rank(papers)
+    graph = Graph(papers)
 
-    g = {} 
+    author_referenced_to = {} 
     authors = set()
+    authors_updated = set()
 
     for paper in papers:
         try:
+            authors_updated.update(paper.authors)
+            for author in authors_updated - authors:
+                author_referenced_to[author] = set()
             authors.update(paper.authors)
         except:
             continue
-        
-
-    for author in authors:
-        try:
-            g[author] = set()
-        except:
-            continue
     
+    # making a list of authors that each author referenced to
     for paper in papers:
         if not paper.authors: continue
         for author in paper.authors:
-            for des in paper.references:
-                des = graph.get_node(des)
-                if des:
-                    for referenced_author in des.node.authors:
-                        g[author].add(referenced_author)
+            for ref in paper.references:
+                ref = graph.get_node(ref)
+                if not ref: continue
+                for ref_author in ref.node.authors:
+                    author_referenced_to[author].add(ref_author)
     
-    return [Node(author, g[author]) for author in g.keys()]
+    return [Node(author, author_referenced_to[author]) for author in author_referenced_to.keys()]

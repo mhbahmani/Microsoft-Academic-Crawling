@@ -1,4 +1,5 @@
 from classes import Data, Node
+from pprint import pprint
 import json
 import utils
 import sys
@@ -6,32 +7,35 @@ import sys
 args = sys.argv[1:]
 ALPHA = float(args[1])
 PR_VALUE = float(args[3])
+NUMBER_OF_ITERATIONS = int(args[5])
 
 
-class Rank:
+class Graph:
     def __init__(self, nodes, alpha=ALPHA):
         self.nodes = nodes
         self.data = {}
+        self.alpha = alpha
+        self.initialize_data(nodes)
+
+    def initialize_data(self, nodes=[]):
         for node in nodes:
             self.data[node.id] = Data(
                 node, PR_VALUE, PR_VALUE, 1, 1, 1, 1)
-        self.alpha = alpha
 
-    def iter_hits(self, n):
+    def iterate_pages(self, n):
         for _ in range(n):
             for data in self.data.values():
                 des_nodes = data.node.references
-                for des_node in des_nodes:
-                    if des_node in self.data.keys():
-                        data.hub_tmp += self.data[des_node].auth 
-                        self.data[des_node].auth_tmp += data.hub
-
-            self.set_data()
+                for ref in des_nodes:
+                    if ref not in self.data.keys(): continue
+                    data.hub_tmp += self.data[ref].auth 
+                    self.data[ref].auth_tmp += data.hub
+            self.update_data()
 
     def get_node(self, id=None):
         return self.data.get(id)
 
-    def set_data(self):
+    def update_data(self):
         for key in self.data.keys():
             self.data[key].page_rank = self.data[key].tmp
             self.data[key].auth = self.data[key].auth_tmp
@@ -52,7 +56,8 @@ class Rank:
                         if des_Node in self.data.keys():
                             self.data[des_Node].tmp += conferred_value
 
-            self.set_data()
+            self.update_data()
+
     def get_page_ranks(self):
         page_ranks = {}
         for d in self.data.values():
@@ -63,21 +68,17 @@ class Rank:
         top_ids = sorted(
             self.data,
             key=lambda id: self.data[id].auth,
-            reverse=True)[:10]
-        top_auth = {}
-        for id in top_ids:
-            top_auth[id] = self.get_node(id).auth
+            reverse=True
+        )[:20]
 
-        return top_auth
+        top_authors = {}
+        for id in top_ids:
+            top_authors[id] = self.get_node(id).auth
+
+        return top_authors
 
 
 if __name__ == '__main__':
-
-   # nodes = utils.load_data()
-   # graph = Rank(nodes, ALPHA)
-   # graph.iterate(5)
-   # page_ranks = json.dumps(graph.get_page_ranks(), indent=3)
-   # utils.authors_rank()
-    r = Rank(utils.authors_rank())
-    r.iter_hits(5)
-    print(json.dumps(r.get_hit_rank(), indent=3))
+    graph = Graph(utils.authors_rank(), ALPHA)
+    graph.iterate_pages(NUMBER_OF_ITERATIONS)
+    pprint(graph.get_hit_rank())

@@ -3,7 +3,6 @@
 project_path=$HOME/.local/share/mir_phase3
 
 source $project_path/venv/bin/activate
-
 start_crawler(){
 	spider=$1
 	if test -z $1; then
@@ -52,20 +51,28 @@ start_crawler(){
 page_rank(){
 	alpha=0.85
 	pr_value=1
+	iteration=5
 	if test $2 = "--alpha"; then
 		alpha=$3
 	elif test $2 = "--pr-value"; then
 		pr_value=$3
+	elif test $2 = "--it"; then
+		iteration=$3
 	fi
 
 	if test $4 = "--alpha"; then
 		alpha=$5
 	elif test $4 = "--pr-value"; then
 		pr_value=$5
+	elif test $4 = "--it"; then
+		iteration=$5
 	fi
-	
-	result=$(python $project_path/mir/page_rank.py --alpha $alpha --pr $pr_value)
-	echo $result
+
+	#result=$(python $project_path/mir/page_rank.py --alpha $alpha --pr $pr_value --iteration $iteration)
+	result=$(python ./mir/page_rank.py --alpha $alpha --pr $pr_value --iteration $iteration) 
+	tee ./output.json << EOF
+$result
+EOF
 	if test ! -z $7; then
 		echo $result > $7
 	fi
@@ -82,6 +89,7 @@ help(){
 	echo "     page-rank               starts PageRank proccess"
 	echo "			--alpha: specify alpha"
 	echo "			--pr-value: speficy pr-value"
+	echo "			--it: specify number of iterations"
 	echo
 	echo
 	echo "	In each commad you can save output with -o option"
