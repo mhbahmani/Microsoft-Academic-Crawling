@@ -13,8 +13,8 @@ class Node:
 class Data:
     node: Node
     page_rank: float
-    hub: float
-    auth: float
+    score: float
+    socore_tmp: float
     tmp: float
-    auth_tmp: float
+    hub: float
     hub_tmp: float

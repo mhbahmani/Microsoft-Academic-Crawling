@@ -28,8 +28,8 @@ class Graph:
                 des_nodes = data.node.references
                 for ref in des_nodes:
                     if ref not in self.data.keys(): continue
-                    data.hub_tmp += self.data[ref].auth 
-                    self.data[ref].auth_tmp += data.hub
+                    data.hub_tmp += self.data[ref].score
+                    self.data[ref].score_tmp += data.hub
             self.update_data()
 
     def get_node(self, id=None):
@@ -38,11 +38,11 @@ class Graph:
     def update_data(self):
         for key in self.data.keys():
             self.data[key].page_rank = self.data[key].tmp
-            self.data[key].auth = self.data[key].auth_tmp
+            self.data[key].score = self.data[key].score_tmp
             self.data[key].hub = self.data[key].hub_tmp
 
         for key in self.data.keys():
-            self.data[key].auth_tmp = 0
+            self.data[key].score_tmp = 0
             self.data[key].hub_tmp = 0
 
     def iterate(self, n):
@@ -67,13 +67,13 @@ class Graph:
     def get_hit_rank(self):
         top_ids = sorted(
             self.data,
-            key=lambda id: self.data[id].auth,
+            key=lambda id: self.data[id].score,
             reverse=True
         )[:20]
 
         top_authors = {}
         for id in top_ids:
-            top_authors[id] = self.get_node(id).auth
+            top_authors[id] = self.get_node(id).score
 
         return top_authors
 
