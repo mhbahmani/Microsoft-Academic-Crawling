@@ -132,11 +132,13 @@ help(){
 	echo "	                           specify output file with -o /path/to/output/file option"
 	echo
 	echo "     page-rank               starts PageRank proccess"
+	echo "			--input: specify data input path"
 	echo "			--alpha: specify alpha"
 	echo "			--pr-value: speficy pr-value"
 	echo "			--it: specify number of iterations"
 	echo
 	echo "     hits		     starts hits proccess"
+	echo "			--input: specify data input path"
 	echo "			--alpha: specify alpha"
 	echo "			--pr-value: speficy pr-value"
 	echo "			--it: specify number of iterations"
