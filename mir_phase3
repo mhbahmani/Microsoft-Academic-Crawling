@@ -81,6 +81,38 @@ EOF
 }
 
 
+hits(){
+	alpha=0.85
+	pr_value=1
+	iteration=5
+	if test $2 = "--alpha"; then
+		alpha=$3
+	elif test $2 = "--pr-value"; then
+		pr_value=$3
+	elif test $2 = "--it"; then
+		iteration=$3
+	fi
+
+	if test $4 = "--alpha"; then
+		alpha=$5
+	elif test $4 = "--pr-value"; then
+		pr_value=$5
+	elif test $4 = "--it"; then
+		iteration=$5
+	fi
+
+	output=/dev/null
+	if test ! -s $9; then
+		output=$9
+	fi
+
+	#result=$(python $project_path/mir/hits.py --alpha $alpha --pr $pr_value --iteration $iteration)
+	result=$(python ./mir/hits.py --alpha $alpha --pr $pr_value --iteration $iteration) 
+	tee $output << EOF
+$result
+EOF
+}
+
 
 help(){
 	echo "    mir_phase3 [COMMAND] [OPTIONS|ARGUMENTS]"
@@ -104,6 +136,9 @@ case $1 in
 		;;
 	page-rank | pr)
 		page_rank $@
+		;;
+	hits)
+		hits $@
 		;;
 	*)
 		help
