@@ -2,15 +2,15 @@ from main import Graph, Node
 import json
 
 
-def load_page_rank_data():
-    return read_data_from_file()
+def load_page_rank_data(path=None):
+    return read_data_from_file(path)
 
 
-def load_hits_data():
-    return authors_referenced(read_data_from_file())
+def load_hits_data(path):
+    return authors_referenced(read_data_from_file(path))
 
 
-def read_data_from_file(path=None):
+def read_data_from_file(path):
     if not path: path = './mir/content.json'
     with open(path) as file:
         data = json.load(file)
@@ -28,12 +28,19 @@ def authors_referenced(data):
     for paper in data:
         try:
             authors_updated.update(paper.authors)
-            for author in authors_updated - authors:
-                author_referenced_to[author] = set()
-            authors.update(paper.authors)
+            # for author in authors_updated - authors:
+            #     author_referenced_to[author] = set()
+            # authors.update(paper.authors)
         except:
             continue
-    
+
+    for author in authors_updated:
+        try:
+            author_referenced_to[author] = set()
+        except:
+            continue
+
+
     # making a list of authors that each author referenced to
     for paper in data:
         if not paper.authors: continue
@@ -58,7 +65,7 @@ def make_hits_results(graph):
         graph.data,
         key=lambda id: graph.data[id].score,
         reverse=True
-    )[:20]
+    )[:10]
 
     top_authors = {}
     for id in top_ids:

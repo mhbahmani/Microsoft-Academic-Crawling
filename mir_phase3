@@ -49,6 +49,7 @@ start_crawler(){
 
 
 page_rank(){
+	path=$project_path/mir/content.json
 	alpha=0.85
 	pr_value=1
 	iteration=5
@@ -56,6 +57,8 @@ page_rank(){
 		alpha=$3
 	elif test $2 = "--pr-value"; then
 		pr_value=$3
+	elif test $2 = "--input"; then
+		path=$3
 	elif test $2 = "--it"; then
 		iteration=$3
 	fi
@@ -64,16 +67,18 @@ page_rank(){
 		alpha=$5
 	elif test $4 = "--pr-value"; then
 		pr_value=$5
+	elif test $4 = "--input"; then
+		path=$5
 	elif test $4 = "--it"; then
 		iteration=$5
 	fi
 
 	output=~/PageRank.json
-	if test ! -s $9; then
-		output=$9
+	if test ! -s $11; then
+		output=$11
 	fi
 
-	#result=$(python $project_path/mir/page_rank.py --alpha $alpha --pr $pr_value --iteration $iteration)
+	#result=$(python $project_path/mir/page_rank.py --data $path --alpha $alpha --pr $pr_value --iteration $iteration)
 	result=$(python ./mir/page_rank.py --alpha $alpha --pr $pr_value --iteration $iteration) 
 	tee $output << EOF
 $result
@@ -82,6 +87,7 @@ EOF
 
 
 hits(){
+	path=$project_path/mir/content.json
 	alpha=0.85
 	pr_value=1
 	iteration=5
@@ -89,6 +95,8 @@ hits(){
 		alpha=$3
 	elif test $2 = "--pr-value"; then
 		pr_value=$3
+	elif test $2 = "--input"; then
+		path=$3
 	elif test $2 = "--it"; then
 		iteration=$3
 	fi
@@ -97,17 +105,19 @@ hits(){
 		alpha=$5
 	elif test $4 = "--pr-value"; then
 		pr_value=$5
+	elif test $4 = "--input"; then
+		path=$5
 	elif test $4 = "--it"; then
 		iteration=$5
 	fi
 
 	output=/dev/null
-	if test ! -s $9; then
-		output=$9
+	if test ! -s ${11}; then
+		output=${11}
 	fi
 
-	#result=$(python $project_path/mir/hits.py --alpha $alpha --pr $pr_value --iteration $iteration)
-	result=$(python ./mir/hits.py --alpha $alpha --pr $pr_value --iteration $iteration) 
+	#result=$(python $project_path/mir/hits.py --data $path --alpha $alpha --pr $pr_value --iteration $iteration)
+	result=$(python ./mir/hits.py --data $path --alpha $alpha --pr $pr_value --iteration $iteration) 
 	tee $output << EOF
 $result
 EOF

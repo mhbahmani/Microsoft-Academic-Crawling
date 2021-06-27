@@ -2,9 +2,11 @@ from classes import Data, Node
 import sys
 
 args = sys.argv[1:]
-ALPHA = float(args[1])
-PR_VALUE = float(args[3])
-NUMBER_OF_ITERATIONS = int(args[5])
+PATH = args[1]
+ALPHA = float(args[3])
+PR_VALUE = float(args[5])
+NUMBER_OF_ITERATIONS = int(args[7])
+
 
 
 class Graph:
