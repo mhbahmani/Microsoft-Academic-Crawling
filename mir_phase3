@@ -120,7 +120,13 @@ help(){
 	echo " commands:"
 	echo "     crawl <spider name>     starts the crawler"
 	echo "	                           specify output file with -o /path/to/output/file option"
+	echo
 	echo "     page-rank               starts PageRank proccess"
+	echo "			--alpha: specify alpha"
+	echo "			--pr-value: speficy pr-value"
+	echo "			--it: specify number of iterations"
+	echo
+	echo "     hits		     starts hits proccess"
 	echo "			--alpha: specify alpha"
 	echo "			--pr-value: speficy pr-value"
 	echo "			--it: specify number of iterations"
