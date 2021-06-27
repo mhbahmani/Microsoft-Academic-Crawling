@@ -48,14 +48,13 @@ class Graph:
     def iterate(self, n):
         for _ in range(n):
             for data in self.data.values():
-                if len(data.node.references) > 0:
-                    conferred_value = (
-                        data.page_rank / len(data.node.references)) * self.alpha
-                    des_nodes = data.node.references
-                    for des_Node in des_nodes:
-                        if des_Node in self.data.keys():
-                            self.data[des_Node].tmp += conferred_value
-
+                if len(data.node.references) <= 0: continue
+                conferred_value = (
+                    data.page_rank / len(data.node.references)) * self.alpha
+                des_nodes = data.node.references
+                for des_Node in des_nodes:
+                    if des_Node not in self.data.keys(): continue
+                    self.data[des_Node].tmp += conferred_value
             self.update_data()
 
     def get_page_ranks(self):
