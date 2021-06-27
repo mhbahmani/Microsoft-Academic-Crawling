@@ -14,7 +14,7 @@ class Data:
     node: Node
     page_rank: float
     score: float
-    socore_tmp: float
+    score_tmp: float
     tmp: float
     hub: float
     hub_tmp: float

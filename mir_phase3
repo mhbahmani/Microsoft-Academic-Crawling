@@ -73,8 +73,8 @@ page_rank(){
 		output=$9
 	fi
 
-	#result=$(python $project_path/mir/page_rank.py --alpha $alpha --pr $pr_value --iteration $iteration)
-	result=$(python ./mir/page_rank.py --alpha $alpha --pr $pr_value --iteration $iteration) 
+	result=$(python $project_path/mir/page_rank.py --alpha $alpha --pr $pr_value --iteration $iteration)
+	#result=$(python ./mir/page_rank.py --alpha $alpha --pr $pr_value --iteration $iteration) 
 	tee $output << EOF
 $result
 EOF
