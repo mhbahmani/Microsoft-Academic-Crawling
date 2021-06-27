@@ -68,14 +68,16 @@ page_rank(){
 		iteration=$5
 	fi
 
+	output=/dev/null
+	if test ! -s $9; then
+		output=$9
+	fi
+
 	#result=$(python $project_path/mir/page_rank.py --alpha $alpha --pr $pr_value --iteration $iteration)
 	result=$(python ./mir/page_rank.py --alpha $alpha --pr $pr_value --iteration $iteration) 
-	tee ./output.json << EOF
+	tee $output << EOF
 $result
 EOF
-	if test ! -z $7; then
-		echo $result > $7
-	fi
 }
 
 
