@@ -20,6 +20,8 @@ curl_inst=0
 [ $(curl --version | grep -Eci 'release-date') = 0 ] && curl_inst=1
 git_inst=0
 [ $(git --version | grep -Eci 'release-date') = 0 ] && git_inst=1
+venv_inst=0
+[ $(git --version | grep -Eci 'from /usr') = 0 ] && venv_inst=1
 
 if [ $curl_inst = 1 ]; then
     if [ -z $package_manager ]; then
@@ -29,8 +31,9 @@ if [ $curl_inst = 1 ]; then
         echo "exiting."
         exit
     fi
-    [ curl_intst = 1 ] && $package_manager curl python3-pip git -y
+    [ curl_intst = 1 ] && $package_manager curl python3-pip-y
     [ git_intst = 1 ] && $package_manager python3-pip git -y
+    [ venv_intst = 1 ] && $package_manager python3-pip virtualenv -y
 fi
 
 echo "Install docker"
